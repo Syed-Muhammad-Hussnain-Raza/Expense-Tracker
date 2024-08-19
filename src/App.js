@@ -1,10 +1,11 @@
 import "./App.css";
+import Balance from "./components/Balance";
 
 function App() {
   return (
-    <center>
-      <h1>Expense Tracker</h1>
-    </center>
+    <div className="bg-slate-300 h-screen">
+      <Balance />
+    </div>
   );
 }
 
