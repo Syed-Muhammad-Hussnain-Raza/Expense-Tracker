@@ -1,20 +1,9 @@
-import { useState } from "react";
+import React from "react";
+import { useTransaction } from "../store/TransactionContext";
 import TransactionMenu from "./TransactionMenu";
 
 const Balance = () => {
-  const [balance, setBalance] = useState(0);
-  const [income, setIncome] = useState(0);
-  const [expense, setExpense] = useState(0);
-
-  const onIncome = (amount) => {
-    setIncome(income + amount);
-    setBalance(balance + amount);
-  };
-
-  const onExpense = (amount) => {
-    setExpense(expense + amount);
-    setBalance(balance - amount);
-  };
+  const { balance, income, expense } = useTransaction();
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -29,7 +18,7 @@ const Balance = () => {
           Expense: <span className="text-white font-bold">{expense}</span>
         </p>
       </div>
-      <TransactionMenu onIncome={onIncome} onExpense={onExpense} />
+      <TransactionMenu />
     </div>
   );
 };

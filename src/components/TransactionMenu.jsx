@@ -1,12 +1,13 @@
-import { useState } from "react";
+import React, { useState } from 'react';
+import { useTransaction } from '../store/TransactionContext';
 
-const TransactionMenu = ({ onIncome, onExpense }) => {
+const TransactionMenu = () => {
   const [menu, setMenu] = useState(false);
-
-  const [data, setData] = useState([]);
   const [amount, setAmount] = useState("");
   const [title, setTitle] = useState("");
   const [transactionType, setTransactionType] = useState("income");
+
+  const { onIncome, onExpense, addTransaction, data } = useTransaction();
 
   const toggleButton = () => {
     setMenu(!menu);
@@ -15,13 +16,6 @@ const TransactionMenu = ({ onIncome, onExpense }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const info = {
-      id: Math.floor(Math.random() * 1000),
-      amount: amount,
-      title: title,
-      transactionType: transactionType,
-    };
-
     if (!amount || !title) {
       alert(
         "Please enter the amount and title. These are required for transaction"
@@ -29,13 +23,20 @@ const TransactionMenu = ({ onIncome, onExpense }) => {
       return;
     }
 
+    const transaction = {
+      id: Math.floor(Math.random() * 1000),
+      amount: Number(amount),
+      title: title,
+      transactionType: transactionType,
+    };
+
     if (transactionType === "income") {
-      onIncome(Number(amount));
+      onIncome(transaction.amount);
     } else {
-      onExpense(Number(amount));
+      onExpense(transaction.amount);
     }
 
-    setData([...data, info]);
+    addTransaction(transaction);
 
     setAmount("");
     setTitle("");
@@ -91,7 +92,7 @@ const TransactionMenu = ({ onIncome, onExpense }) => {
       </div>
       {data.length > 0 &&
         data.map((dt) => (
-          <div className="flex">
+          <div className="flex" key={dt.id}>
             <div
               className={`flex w-[210px] justify-between flex-row text-white gap-4 mb-2 p-2 font-bold rounded-md 
                 ${
