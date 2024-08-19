@@ -7,13 +7,13 @@ const Balance = () => {
   const [expense, setExpense] = useState(0);
 
   const onIncome = (amount) => {
-    setIncome(income + amount);
-    setBalance(balance + amount);
+    setIncome((prevIncome) => prevIncome + amount);
+    setBalance((prevBalance) => prevBalance + amount);
   };
 
   const onExpense = (amount) => {
-    setExpense(expense + amount);
-    setBalance(balance - amount);
+    setExpense((prevExpense) => prevExpense + amount);
+    setBalance((prevBalance) => prevBalance - amount);
   };
 
   return (
