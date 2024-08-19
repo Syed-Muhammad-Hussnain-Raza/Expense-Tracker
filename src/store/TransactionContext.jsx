@@ -1,37 +1,43 @@
-import { createContext, useReducer } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-const initialState = {
-  income: 0,
-  expense: 0,
-  transactions: [],
-};
+// Create a context
+const TransactionContext = createContext();
 
-const transactionReducer = (state, action) => {
-  switch (action.type) {
-    case "ADD_INCOME":
-      return {
-        ...state,
-        income: state.income + action.payload.amount,
-        transactions: [...state.transactions, action.payload],
-      };
-    case "ADD_EXPENSE":
-      return {
-        ...state,
-        expense: state.expense + action.payload.amount,
-        transactions: [...state.transactions, action.payload],
-      };
-    default:
-      return state;
-  }
-};
-
-export const TransactionContext = createContext(initialState);
+// Create a custom hook
+export const useTransaction = () => useContext(TransactionContext);
 
 export const TransactionProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(transactionReducer, initialState);
+  const [balance, setBalance] = useState(0);
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [data, setData] = useState([]);
+
+  const onIncome = (amount) => {
+    setIncome((prevIncome) => prevIncome + amount);
+    setBalance((prevBalance) => prevBalance + amount);
+  };
+
+  const onExpense = (amount) => {
+    setExpense((prevExpense) => prevExpense + amount);
+    setBalance((prevBalance) => prevBalance - amount);
+  };
+
+  const addTransaction = (transaction) => {
+    setData((prevData) => [...prevData, transaction]);
+  };
 
   return (
-    <TransactionContext.Provider value={{ state, dispatch }}>
+    <TransactionContext.Provider
+      value={{
+        balance,
+        income,
+        expense,
+        onIncome,
+        onExpense,
+        data,
+        addTransaction,
+      }}
+    >
       {children}
     </TransactionContext.Provider>
   );
